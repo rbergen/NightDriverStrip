@@ -9,12 +9,14 @@ html {
     overflow: hidden;  
 }
 body {
-    background: url(assets/bg.png) no-repeat center center fixed;
+    background: black no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     height: 100%;
+    color: white;
+    font-family:Arial, Helvetica, sans-serif
 }
 div#outer {
     display: table;
@@ -39,15 +41,18 @@ div#container {
 </style>
 
 <!-- ESP Web Tools -->
-    <script
-        type="module"
-        src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"
-        ></script>
+<script
+  type="module"
+  src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"
+></script>
 <!-- End of ESP Web Tools -->
 
 </head>
 <body>
+    <center>
+
     <div class="content">
+      <img src="assets/NightDriverLogo-small.png" style="width: 640px; height: 380px" />
       <h1>NightDriverLED ESP32 Installation Wizard</h1>
       <label for="devices-dropdown">Select your device type:</label>
       <select id="devices-dropdown"></select>
@@ -59,6 +64,9 @@ div#container {
       <p class="button-row" align="center">
         <esp-web-install-button class="invisible"></esp-web-install-button>
       </p>
+    </div>
+
+    </center>
 
     <script>
       const devicesDropdown = document.getElementById("devices-dropdown");
@@ -73,6 +81,22 @@ div#container {
           devices = data.devices;
           populateDevicesDropdown(devices);
         });
+
+      function setManifest(manifest) {
+        if (manifest !== undefined) {
+          installButton.manifest = manifest;
+          installButton.classList.remove('invisible');
+        }
+        else {
+          installButton.removeAttribute('manifest');
+          if (!installButton.classList.contains('invisible'))
+            installButton.classList.add('invisible');
+        }
+      }
+
+      function clearManifest() {
+        setManifest(undefined);
+      }
 
       // Populate devices dropdown
       function populateDevicesDropdown(devices) {
@@ -112,8 +136,7 @@ div#container {
           projectsDropdown.disabled = false;
         }
 
-        installButton.removeAttribute('manifest');
-        installButton.disabled = true;
+        clearManifest();
       }
 
       devicesDropdown.addEventListener("change", function() {
@@ -126,16 +149,12 @@ div#container {
       projectsDropdown.addEventListener("change", function() {
         let tag = projectsDropdown.value;
 
-        if (tag) {
-          installButton.manifest = `manifests/manifest_${tag}.json`;
-          installButton.classList.remove('invisible');
-          installButton.disabled = false;
-        }
-        else {
-          installButton.removeAttribute('manifest');
-          installButton.disabled = true;
-        }
+        if (tag)
+          setManifest(`manifests/manifest_${tag}.json`);
+        else 
+          clearManifest();
       });
     </script>
+
   </body>
   </html>
