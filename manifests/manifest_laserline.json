@@ -1,6 +1,6 @@
 {
   "name": "Laser Line for M5StickC Plus",
-  "version": "0.901",
+  "version": "036",
   "builds": [
     {
       "chipFamily": "ESP32",

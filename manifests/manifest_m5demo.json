@@ -1,6 +1,6 @@
 {
   "name": "Demo for M5StickC",
-  "version": "0.901",
+  "version": "036",
   "builds": [
     {
       "chipFamily": "ESP32",
