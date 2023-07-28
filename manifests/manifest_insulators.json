@@ -1,15 +1,13 @@
 {
   "name": "Insulators for M5StickC Plus",
   "version": "v038",
+  "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts": 
+      "parts":
       [
-        { "path": "../firmware/insulators/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/insulators/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/insulators/firmware.bin", "offset": 65536 },
-        { "path": "../firmware/insulators/spiffs.bin", "offset": 3342336 }
+        { "path": "../firmware/insulators/firmware_merged.bin", "offset": 0 }
       ]
     }
   ]

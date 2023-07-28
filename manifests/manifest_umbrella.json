@@ -1,15 +1,13 @@
 {
   "name": "Umbrella for ESP32",
   "version": "v038",
+  "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts": 
+      "parts":
       [
-        { "path": "../firmware/umbrella/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/umbrella/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/umbrella/firmware.bin", "offset": 65536 },
-        { "path": "../firmware/umbrella/spiffs.bin", "offset": 3342336 }
+        { "path": "../firmware/umbrella/firmware_merged.bin", "offset": 0 }
       ]
     }
   ]

@@ -1,15 +1,13 @@
 {
   "name": "Ledstrip for Heltec Wifi Kit 32",
   "version": "v038",
+  "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts": 
+      "parts":
       [
-        { "path": "../firmware/ledstrip/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/ledstrip/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/ledstrip/firmware.bin", "offset": 65536 },
-        { "path": "../firmware/ledstrip/spiffs.bin", "offset": 3342336 }
+        { "path": "../firmware/ledstrip/firmware_merged.bin", "offset": 0 }
       ]
     }
   ]

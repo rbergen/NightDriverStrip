@@ -1,15 +1,13 @@
 {
   "name": "Ledstrip for ESP-WROVER-KIT",
   "version": "v038",
+  "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts": 
+      "parts":
       [
-        { "path": "../firmware/ledstrip_feather_wrover/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/ledstrip_feather_wrover/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/ledstrip_feather_wrover/firmware.bin", "offset": 65536 },
-        { "path": "../firmware/ledstrip_feather_wrover/spiffs.bin", "offset": 3342336 }
+        { "path": "../firmware/ledstrip_feather_wrover/firmware_merged.bin", "offset": 0 }
       ]
     }
   ]
