@@ -1,13 +1,15 @@
 {
   "name": "Chieftain for TinyPICO",
-  "version": "v038",
-  "new_install_prompt_erase": true,
+  "version": "v040",
   "builds": [
     {
       "chipFamily": "ESP32",
-      "parts":
+      "parts": 
       [
-        { "path": "../firmware/chieftain/firmware_merged.bin", "offset": 0 }
+        { "path": "../firmware/chieftain/bootloader.bin", "offset": 4096  },
+        { "path": "../firmware/chieftain/partitions.bin", "offset": 32768 },
+        { "path": "../firmware/chieftain/firmware.bin", "offset": 65536 },
+        { "path": "../firmware/chieftain/spiffs.bin", "offset": 3342336 }
       ]
     }
   ]
