@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/umbrella/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/umbrella/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/umbrella/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/umbrella/merged_image.bin", "offset": 0 }
       ]
     }
   ]

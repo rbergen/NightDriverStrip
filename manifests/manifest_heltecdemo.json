@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/heltecdemo/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/heltecdemo/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/heltecdemo/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/heltecdemo/merged_image.bin", "offset": 0 }
       ]
     }
   ]

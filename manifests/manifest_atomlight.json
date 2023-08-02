@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/atomlight/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/atomlight/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/atomlight/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/atomlight/merged_image.bin", "offset": 0 }
       ]
     }
   ]

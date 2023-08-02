@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/xmastrees/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/xmastrees/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/xmastrees/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/xmastrees/merged_image.bin", "offset": 0 }
       ]
     }
   ]

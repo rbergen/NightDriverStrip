@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/insulators/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/insulators/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/insulators/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/insulators/merged_image.bin", "offset": 0 }
       ]
     }
   ]

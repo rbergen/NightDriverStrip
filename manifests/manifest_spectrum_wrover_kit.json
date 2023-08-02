@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/spectrum_wrover_kit/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/spectrum_wrover_kit/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/spectrum_wrover_kit/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/spectrum_wrover_kit/merged_image.bin", "offset": 0 }
       ]
     }
   ]

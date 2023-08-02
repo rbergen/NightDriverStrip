@@ -6,9 +6,7 @@
     {
       "chipFamily": "ESP32",
       "parts": [
-        { "path": "../firmware/ledstrip_feather_wrover/bootloader.bin", "offset": 4096  },
-        { "path": "../firmware/ledstrip_feather_wrover/partitions.bin", "offset": 32768 },
-        { "path": "../firmware/ledstrip_feather_wrover/firmware.bin", "offset": 65536 }
+        { "path": "../firmware/ledstrip_feather_wrover/merged_image.bin", "offset": 0 }
       ]
     }
   ]
