@@ -22,19 +22,19 @@ _Davepl, 9/19/2021_
   - [Reconfiguring WiFi using the Web Installer](#reconfiguring-wifi-using-the-web-installer)
 - [Beyond the Web Installer](#beyond-the-web-installer)
 - [Device web UI and API](#device-web-ui-and-api)
-- [Getting Started with the Source Code](#getting-started-with-the-source-code)
-- [Wifi Setup](#wifi-setup)
-- [Feature Defines](#feature-defines)
+- [Getting started with the source code](#getting-started-with-the-source-code)
+- [Wifi setup](#wifi-setup)
+- [Feature defines](#feature-defines)
 - [Adding new effects](#adding-new-effects)
 - [Fetching things from the Internet](#fetching-things-from-the-internet)
-- [Build Pointers](#build-pointers)
+- [Build pointers](#build-pointers)
 - [File system](#file-system)
 - [Tools](#tools)
-- [Bonus Exercise](#bonus-exercise)
+- [Bonus exercise](#bonus-exercise)
 - [Super Bonus Exercise](#super-bonus-exercise)
-- [Sample Parts (Plummer's Software LLC Amazon Affiliate Links)](#sample-parts-plummers-software-llc-amazon-affiliate-links)
-- [Contributing, and the BlinkenPerBit Metric](#contributing-and-the-blinkenperbit-metric)
-- [Time It Takes To Build This Project](#time-it-takes-to-build-this-project)
+- [Sample parts (Plummer's Software LLC Amazon affiliate links)](#sample-parts-plummers-software-llc-amazon-affiliate-links)
+- [Contributing, and the BlinkenPerBit metric](#contributing-and-the-blinkenperbit-metric)
+- [Time it takes to build this project](#time-it-takes-to-build-this-project)
 
 ## What NightDriverStrip is
 
@@ -108,6 +108,8 @@ If you want to change the WiFi configuration on an already flashed device, use t
 
 The images included in the installer are built using the current state of the source code in this repository. If there's anything you'd like to change in (the configuration of) the project you want to use, then it is time to move to the next stage.
 
+As the next stage will quite quickly require some knowledge of the structure of the application that is NightDriverStrip, this may be a good time to read the [Introduction to the NightDriverStrip codebase](./CODEBASE_INTRO.md).
+
 ## Device web UI and API
 
 On devices with WiFi, NightDriverStrip can start a webserver that hosts the web UI that is part of the project. It can be used to view and change what effect is running, and get live performance statistics of the device.
@@ -119,20 +121,22 @@ More information about the web UI can be found [in its own README.md](site/READM
 Besides the web UI, the webserver also publishes a REST-like API. Amongst others, a range of configuration settings can be read and changed using it.
 More information about the API is available in [REST_API.md](./REST_API.md).
 
-## Getting Started with the Source Code
+## Getting started with the source code
 
 I recommend you do the following:
 
 - Copy include/secrets.example.h to include/secrets.h; Set your WiFi SSID and password in include/secrets.h.
 - Build the source code. In particular, build the `DEMO` configuration. Some pointers on what's needed to do this can be found [below](#build-pointers).
 - Upload the resultant binary to the ESP32
-- Connect PIN5 and GND and 5V of a WS2812B strip to the ESP32
+- Connect the wire associated with LED_PIN0 in your include/globals.h and GND and 5V of a WS2812B strip to the ESP32. For
+  example, this will be Pin 5 for ATOMLIGHT, but even for DEMO, may be Pin 32 for M5STICKC, M5STICKCPLUS, or M5STACKCORE2
+  or 21 for the LILYGOTDISPLAYS3.
 - Provide an adequate power source for the LEDs and ESP32
 - Enjoy the pretty lights
 - Start enabling features in the `globals.h` or platformio.ini file like WiFi and WebServer. See [Feature Defines](#feature-defines) below.
 - Connect to the ESP32's web user interface with a browser to its IP address
 
-## Wifi Setup
+## Wifi setup
 
 Ensure your WiFi SSID and password are set in include/secrets.h, which can be created by making a copy of include/secrets.example.h.<br/>
 Please do make sure you set them in include/secrets.h, NOT in include/secrets.example.h!
@@ -145,7 +149,7 @@ Enable WiFi by setting the ENABLE_WIFI define to 1 in globals.h.
 
 This can also be configured in the platformio.ini file, as described in the [Feature Defines](#feature-defines) section below.
 
-## Feature Defines
+## Feature defines
 
 These defines enable the major features of NightDriverStrip. Define them in platformio.ini's build_flags or in globals.h.
 Note: Some defines are board specific, this is noted below.
@@ -195,15 +199,30 @@ Each channel of LEDs has an `LEDStripGfx` instance associated with it. `_GFX[0]`
 
 The simplest configuration, `DEMO`, assumes you have a single meter strip of 144 LEDs and a power supply connected to your ESP32. It boots up, finds a single `RainbowFillEffect` in the `LoadEffectFactories()` function, and repeatedly calls its `Draw()` method to update the CRGB array before sending it out to the LEDs. If working correctly it should draw a scrolling rainbow palette on your LED strip.
 
+That simplest configuration, called here simply 'DEMO', is provided by a board specific build environment. The list of such environments can be seen by running 'python3 tools/show_envs.py', which would tell the reader that, as of this writing, hardware specific variations of 'DEMO' include:
+
+- demo
+- m5demo
+- m5plusdemo
+- heltecdemo
+- heltecv2demo
+- heltecv3demo
+- lilygo-tdisplay-s3-demo
+
+These [build types](#build-pointers) may be chosen by the '-e' argument
+to pio or in a menu option inside the PlatformIO IDE/VS Code.
+
 Concerning JSON peristence: the effects table is persisted to a JSON file on SPIFFS at regular intervals, to retain the state of effects (and in fact the whole effect list) across reboots. This is largely in preparation for future updates to NightDriverStrip, where the composition of the effect list configuration of individual effects can be changed using the device web application. The API endpoints to facilitate this are already available and ready for use (see [Device web UI and API](#device-web-ui-and-api), below.)
 
 This makes that an override of `SerializeToJSON()` and a corresponding deserializing constructor must be provided for effects that need (or want) to persist more than the friendly name and effect number. Those two properties are (de)serialized from/to JSON by `LEDStripEffect` by default.
+
+**Note**: in line with the convention in ArduinoJson, which is the library used by the JSON serialization logic, `SerializeToJSON()` _must_ return `true` _except_ when an ArduinoJson function (like `JsonObject::set()`) returns `false` to indicate it ran out of buffer memory. Any `SerializeToJSON()` function returning `false` will trigger an increase in the serialization buffer and a restart of the serialization process.
 
 ## Fetching things from the Internet
 
 If you develop an effect that requires data that needs to be pulled in from the Internet then you can register a network reader function with the `NetworkReader` class, which is available via the `g_ptrNetworkReader` global variable. You can use either the `PatternSubscribers` or `PatternWeather` effects as sources of inspiration.
 
-## Build Pointers
+## Build pointers
 
 The project can be built using [PlatformIO](https://platformio.org/). There's a [PlatformIO IDE](https://platformio.org/platformio-ide) available, which is built on top of Visual Studio Code. Included in it are the command-line [PlatformIO Core](https://platformio.org/install/cli) tools. They can also be installed on their own if you prefer not using the IDE.
 
@@ -247,7 +266,7 @@ cd tools
 ./buddybuild.sh
 ```
 
-## Bonus Exercise
+## Bonus exercise
 
 Write something simple to send color data to the socket. The format is very basic: which channel, how many LEDs you're drawing, when to draw it, and the color data itself. You can send uncompressed data with a zero timestamp as long as you send the correct header before your data, which is very simple. Data with a zero timestamp will just be drawn immediately with no buffering.
 
@@ -266,7 +285,7 @@ If built with `ENABLE_WIFI` and `INCOMING_WIFI_ENABLED`, if the chip is able to 
 
 Generate a series of 24 frames per second (or 30 if under 500 LEDs) and set the timestamp to "Now" plus 1/2 a second. Send them to the chip over WiFi and they will be drawn 1/2 second from now in a steady stream as the timestamps you gave each packet come due.
 
-## Sample Parts (Plummer's Software LLC Amazon Affiliate Links)
+## Sample parts (Plummer's Software LLC Amazon affiliate links)
 
 - BTF-Lighting WS2812B Strip, 144 pixels per meter, white: [Amazon.com](https://amzn.to/3CtZW2g)
 - BTF-Lighting WS2812B Strip, 144 pixels per meter, black: [Amazon.com](https://amzn.to/39ljqcO)
@@ -278,7 +297,7 @@ Generate a series of 24 frames per second (or 30 if under 500 LEDs) and set the 
 
 Full Disclosure: As an Amazon Associate, PlummersSoftwareLLC earns commission from qualifying purchases. It's not added to the purchase price, and does not increase your cost at all. Plus, all 2021 profits from the Dave's Garage Channel, which includes these sales, will go to the UW Autism Center.
 
-## Contributing, and the BlinkenPerBit Metric
+## Contributing, and the BlinkenPerBit metric
 
 Rather than produce a complex set of guidelines, here's what I hope open-source collaboration will bring to the project: that folks will add important features and fix defects and shortcomings in the code. When they're adding features, they'll do it in a way consistent with the way things are done in the existing code. They resist the urge to rearchitect and rewrite everything in their own image and instead put their efforts towards maximizing functional improvement while reducing source code thrash and change.
 
@@ -292,7 +311,7 @@ A lifetime of coding has taught me to err on the side of simplicity, so please d
 
 Add whatever you want and/or need to make your LED dreams come true. Fix my blunders. Fill in the obvious gaps in my knowledge. Whatever has the most blinken for the fewest bits get my vote. You only get so much additional cool blinken for every byte of code and program. That return is measured in BlinkenPerBit, the amount of blinking awesomeness the code adds divided by the impact on the source (and binary).
 
-## Time It Takes To Build This Project
+## Time it takes to build this project
 
 Time to build the SPECTRUM config (`pio run -e spectrum`). Assumes a clean build after everything has been installed and downloaded.
 
