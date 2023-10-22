@@ -101,17 +101,9 @@
 #include <numeric>
 
 #include <Arduino.h>
-#include <ArduinoOTA.h>                         // For updating the flash over WiFi
-#include <ESPmDNS.h>
-#include <SPI.h>
-
-#include <nvs_flash.h>                   // Non-volatile storage access
-#include <nvs.h>
 
 #define FASTLED_INTERNAL 1               // Suppresses build banners
 #include <FastLED.h>
-
-#include <WiFi.h>
 
 #include <RemoteDebug.h>
 
@@ -338,7 +330,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define TOGGLE_BUTTON_2 39
 
     #define NUM_INFO_PAGES          2
-    #define ONSCREEN_SPECTRUM_PAGE  1   // Show a little spctrum analyzer on one of the info pages (slower)
 
 #elif TREESET
 
@@ -440,7 +431,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define LED_PIN0 32
 
     #define NUM_INFO_PAGES          2
-    #define ONSCREEN_SPECTRUM_PAGE  1   // Show a little spectrum analyzer on one of the info pages (slower)
 
 #elif MESMERIZER
 
@@ -524,8 +514,7 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define POWER_LIMIT_MW  (1 * 5 * 1000)         // Expects at least a 5V, 1A supply
 
     #define TOGGLE_BUTTON_1         35
-    #define NUM_INFO_PAGES          4
-    #define ONSCREEN_SPECTRUM_PAGE  2   // Show a little spectrum analyzer on one of the info pages (slower)
+    #define NUM_INFO_PAGES          2
 
 #elif XMASTREES
 
@@ -863,7 +852,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
     #if !(SPECTRUM_WROVER_KIT)
         #define NUM_INFO_PAGES          2
-        #define ONSCREEN_SPECTRUM_PAGE  1   // Show a little spectrum analyzer on one of the info pages (slower)
     #endif
 
 #elif FANSET
@@ -915,7 +903,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
     #if !(SPECTRUM_WROVER_KIT)
         #define NUM_INFO_PAGES          2
-        #define ONSCREEN_SPECTRUM_PAGE  1   // Show a little spectrum analyzer on one of the info pages (slower)
     #endif
 
 
@@ -989,9 +976,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define TOGGLE_BUTTON_2 39
 
     #define NUM_INFO_PAGES          2
-    #define ONSCREEN_SPECTRUM_PAGE  1   // Show a little spectrum analyzer on one of the info pages (slower)
-
-
 
 #elif CUBE
 
@@ -1083,9 +1067,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
 #define STACK_SIZE (ESP_TASK_MAIN_STACK) // Stack size for each new thread
 #define TIME_CHECK_INTERVAL_MS (1000 * 60 * 5)   // How often in ms we resync the clock from NTP
-#define MIN_BRIGHTNESS  10
-#define MAX_BRIGHTNESS  255
-#define BRIGHTNESS_STEP 20          // Amount to step brightness on each remote control repeat
 #define MAX_RINGS       5
 
 
@@ -1550,44 +1531,17 @@ inline bool SetSocketBlockingEnabled(int fd, bool blocking)
 
 // Main includes
 
-#include <TJpg_Decoder.h>
-#include "improvserial.h"                       // ImprovSerial impl for setting WiFi credentials over the serial port
 #include "gfxbase.h"                            // GFXBase drawing interface
-#include "screen.h"                             // LCD/TFT/OLED handling
 #include "socketserver.h"                       // Incoming WiFi data connections
-#include "soundanalyzer.h"                      // for audio sound processing
 #include "ledstripgfx.h"                        // Essential drawing code for strips
-#include "ledmatrixgfx.h"                       // For drawing to HUB75 matrices
 #include "ledstripeffect.h"                     // Defines base led effect classes
 #include "ntptimeclient.h"                      // setting the system clock from ntp
 #include "effectmanager.h"                      // For g_EffectManager
-#include "ledviewer.h"                          // For the LEDViewer task and object
-#include "network.h"                            // Networking
 #include "ledbuffer.h"                          // Buffer manager for strip
-#if defined(TOGGLE_BUTTON_1) || defined(TOGGLE_BUTTON_2)
-#include "Bounce2.h"                            // For Bounce button class
-#endif
 #include "colordata.h"                          // color palettes
-#include "drawing.h"                            // drawing code
-#include "taskmgr.h"                            // for cpu usage, etc
 
 #if USE_TFTSPI
     #define DISABLE_ALL_LIBRARY_WARNINGS 1
     #include <TFT_eSPI.h>
     #include <SPI.h>
 #endif
-
-// Conditional includes depending on which project is being build
-
-#if USE_HUB75
-    #include "effects/matrix/PatternSubscribers.h"  // For subscriber count effect
-#endif
-
-#if ENABLE_WIFI && ENABLE_WEBSERVER
-    #include "webserver.h"
-#endif
-
-#if ENABLE_REMOTE
-    #include "remotecontrol.h"
-#endif
-

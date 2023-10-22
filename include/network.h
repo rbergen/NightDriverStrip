@@ -27,13 +27,14 @@
 //---------------------------------------------------------------------------
 #pragma once
 
-#include "secrets.h"                          // copy include/secrets.example.h to include/secrets.h
 #include "types.h"
 
 #if INCOMING_WIFI_ENABLED
     #include "socketserver.h"
 #endif
 
+    extern DRAM_ATTR String WiFi_password;
+    extern DRAM_ATTR String WiFi_ssid;
 #if ENABLE_WIFI
     void processRemoteDebugCmd();
 

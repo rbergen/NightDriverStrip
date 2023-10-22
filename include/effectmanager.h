@@ -49,14 +49,12 @@
 #define JSON_FORMAT_VERSION         1
 #define CURRENT_EFFECT_CONFIG_FILE  "/current.cfg"
 
-// References to functions in other C files
+// Forward references to functions in our accompanying CPP file
 
 void InitSplashEffectManager();
 void InitEffectsManager();
 void SaveEffectManagerConfig();
 void RemoveEffectManagerConfig();
-void SaveCurrentEffectIndex();
-bool ReadCurrentEffectIndex(size_t& index);
 
 std::shared_ptr<LEDStripEffect> GetSpectrumAnalyzer(CRGB color);
 std::shared_ptr<LEDStripEffect> GetSpectrumAnalyzer(CRGB color, CRGB color2);
@@ -112,6 +110,9 @@ class  EffectManager : public IJSONSerializable
 
     // Implementation is in effects.cpp
     void LoadJSONAndMissingEffects(const JsonArrayConst& effectsArray);
+
+    void SaveCurrentEffectIndex();
+    bool ReadCurrentEffectIndex(size_t& index);
 
     void ClearEffects()
     {
@@ -185,13 +186,16 @@ public:
     //
     // If no effects are successfully loaded from JSON, it loads the default effects.
     //
-    // If the JSON object includes an "eef" array, the function attempts to load each effect's enabled state from it.
+    // If the JSON object includes an "eef" array, the function attempts to load each effect's enabled
+    // state from it.
     // If the index exceeds the "eef" array's size, the effect is enabled by default.
     //
-    // The function also sets the effect interval from the "ivl" field in the JSON object, defaulting to a pre-defined value if the field isn't present.
+    // The function also sets the effect interval from the "ivl" field in the JSON object, defaulting
+    // to a pre-defined value if the field isn't present.
     //
-    // If the JSON object includes a "cei" field, the function sets the current effect index to this value.
-    // If the value is greater than or equal to the number of effects, it defaults to the last effect in the vector.
+    // If the JSON object includes a "cei" field, the function sets the current effect index to this
+    // value. If the value is greater than or equal to the number of effects, it defaults to the last
+    // effect in the vector.
     //
     // Lastly, the function calls the construct() method, indicating successful deserialization.
 
@@ -471,7 +475,7 @@ public:
     }
 
     // Creates a copy of an existing effect in the list. Note that the effect is created but not yet added to the effect list;
-    //   use the AppendEffect() function for that. Implementation is in effects.cpp.
+    //   use the AppendEffect() function for that.
     std::shared_ptr<LEDStripEffect> CopyEffect(size_t index);
 
     // Adds an effect to the effect list and enables it. If an effect is added that is already in the effect list then the result
@@ -591,25 +595,37 @@ public:
     {
         // If the Interval is set to zero, we treat that as an infinite interval and don't even look at the time used so far
         uint timeUsedByCurrentEffect = GetTimeUsedByCurrentEffect();
-        uint interval = GetInterval();
+        uint interval = GetEffectiveInterval();
 
         return timeUsedByCurrentEffect > interval ? 0 : (interval - timeUsedByCurrentEffect);
     }
 
+    uint GetEffectiveInterval() const
+    {
+        auto& currentEffect = GetCurrentEffect();
+        // This allows you to return a MaximumEffectTime and your effect won't be shown longer than that
+        return min((IsIntervalEternal() ? std::numeric_limits<uint>::max() : _effectInterval),
+                   (currentEffect.HasMaximumEffectTime() ? currentEffect.MaximumEffectTime() : std::numeric_limits<uint>::max()));
+    }
+
     uint GetInterval() const
     {
-        // This allows you to return a MaximumEffectTime and your effect won't be shown longer than that
-        return min((_effectInterval == 0 ? std::numeric_limits<uint>::max() : _effectInterval), GetCurrentEffect().MaximumEffectTime());
+        return _effectInterval;
+    }
+
+    bool IsIntervalEternal() const
+    {
+        return _effectInterval == 0;
     }
 
     void CheckEffectTimerExpired()
     {
         // If interval is zero, the current effect never expires unless it thas a max effect time set
 
-        if (_effectInterval == 0 && !GetCurrentEffect().HasMaximumEffectTime())
+        if (IsIntervalEternal() && !GetCurrentEffect().HasMaximumEffectTime())
             return;
 
-        if (GetTimeUsedByCurrentEffect() >= GetInterval()) // See if it's time for a new effect yet
+        if (GetTimeUsedByCurrentEffect() >= GetEffectiveInterval()) // See if it's time for a new effect yet
         {
             if (_clearTempEffectWhenExpired)
             {
@@ -715,7 +731,7 @@ public:
             return;
         }
 
-        if (_effectInterval == 0)
+        if (IsIntervalEternal())
         {
             g_Values.Fader = 255;
             return;
