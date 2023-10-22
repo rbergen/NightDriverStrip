@@ -43,7 +43,11 @@
 // Note that any log file that has been written to SPIFFS will be deleted as soon
 // as the board is booted with ENABLE_IMPROV_LOGGING set to 0!
 #ifndef ENABLE_IMPROV_LOGGING
-    #define ENABLE_IMPROV_LOGGING   0
+    #if PANLEE
+        #define ENABLE_IMPROV_LOGGING   1
+    #else
+        #define ENABLE_IMPROV_LOGGING   0
+    #endif
 #endif
 
 enum ImprovSerialType : uint8_t
