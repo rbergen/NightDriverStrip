@@ -345,7 +345,7 @@ void setup()
         #if CONFIG_IDF_TARGET_ESP32S3
             String family = "ESP32-S3";
         #else
-	        String family = "ESP32";
+            String family = "ESP32";
         #endif
 
         debugW("Starting ImprovSerial for %s", family.c_str());
@@ -503,8 +503,8 @@ void setup()
     taskManager.StartRemoteThread();
 
     #if ENABLE_WIFI
-        debugI("Making first attempt to connect to WiFi.");
-        ConnectToWiFi(WiFi_ssid.c_str(), WiFi_password.c_str());
+        debugI("Making initial attempt to connect to WiFi.");
+        ConnectToWiFi(WiFi_ssid, WiFi_password);
         Debug.setSerialEnabled(true);
     #endif
 
