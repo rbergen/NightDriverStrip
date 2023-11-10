@@ -138,7 +138,8 @@ struct SettingSpec
         Boolean,
         String,
         Palette,
-        Color
+        Color,
+        Slider
     };
 
     enum class SettingAccess : char
@@ -148,34 +149,72 @@ struct SettingSpec
         ReadWrite
     };
 
+    // "Technical" name of the setting, as in the (JSON) property it is stored in.
     const char* Name;
-    const char* FriendlyName;
-    const char* Description;
-    SettingType Type;
-    bool HasValidation = false;
-    SettingAccess Access = SettingAccess::ReadWrite;
-    bool Optional = false;
 
+    // "Friendly" name of the setting, as in the one to be presented to the user in a user interface.
+    const char* FriendlyName;
+
+    // Description of the purpose and/or value of the setting
+    const char* Description;
+
+    // Value type of the setting
+    SettingType Type;
+
+    // Indication if validation for the setting's value is available
+    bool HasValidation = false;
+
+    // Indication if a setting is read-only, write-only or read/write
+    SettingAccess Access = SettingAccess::ReadWrite;
+
+    // Indication if an empty value is allowed for the setting. This only applies to String settings.
+    std::optional<bool> EmptyAllowed = {};
+
+    // Minimum valid value for the setting. This only applies to numeric settings.
     std::optional<double> MinimumValue = {};
+
+    // Maximum valid value for the setting. This only applies to numeric settings.
     std::optional<double> MaximumValue = {};
 
+    // Finishes the initialization of the spec, and then validates the consistency of its overall contents.
+    // Note that it does the latter quite rudely: it uses assert() on things it feels should be in order.
+    // This function is called by this struct's constructors that initialize values, but this being a struct
+    // allows itself to be called from the outside as well.
+    void FinishAndValidateInitialization()
+    {
+        // Default to front-end rejection of empty Strings
+        if (Type == SettingType::String)
+            EmptyAllowed = false;
+        else
+            // Check that both min and max value are set for Slider
+            assert(Type != SettingType::Slider || (MinimumValue.has_value() && MaximumValue.has_value()));
+
+        // If min and max value are both set, min must be less or equal than max
+        assert(!(MinimumValue.has_value() && MaximumValue.has_value()) || MinimumValue.value() <= MaximumValue.value());
+    }
 
     SettingSpec(const char* name, const char* friendlyName, const char* description, SettingType type)
       : Name(name),
         FriendlyName(friendlyName),
         Description(description),
         Type(type)
-    {}
+    {
+        FinishAndValidateInitialization();
+    }
 
     SettingSpec(const char* name, const char* friendlyName, SettingType type) : SettingSpec(name, friendlyName, nullptr, type)
     {}
 
     // Constructor that sets both mininum and maximum values
     SettingSpec(const char* name, const char* friendlyName, const char* description, SettingType type, double min, double max)
-      : SettingSpec(name, friendlyName, description, type)
+      : Name(name),
+        FriendlyName(friendlyName),
+        Description(description),
+        Type(type),
+        MinimumValue(min),
+        MaximumValue(max)
     {
-        MinimumValue = min;
-        MaximumValue = max;
+        FinishAndValidateInitialization();
     }
 
     // Constructor that sets both mininum and maximum values
@@ -188,7 +227,7 @@ struct SettingSpec
 
     virtual String TypeName() const
     {
-        const String names[] = { "Integer", "PositiveBigInteger", "Float", "Boolean", "String", "Palette", "Color" };
+        const String names[] = { "Integer", "PositiveBigInteger", "Float", "Boolean", "String", "Palette", "Color", "Slider" };
         return names[static_cast<int>(Type)];
     }
 };

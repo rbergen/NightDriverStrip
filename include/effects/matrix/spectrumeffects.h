@@ -65,12 +65,14 @@ class InsulatorSpectrumEffect : public LEDStripEffect, public BeatEffectBase, pu
 
     virtual bool SerializeToJSON(JsonObject& jsonObject) override
     {
-        AllocatedJsonDocument jsonDoc(512);
+        AllocatedJsonDocument jsonDoc(LEDStripEffect::_jsonSize + 384);
 
         JsonObject root = jsonDoc.to<JsonObject>();
         LEDStripEffect::SerializeToJSON(root);
 
         jsonDoc[PTY_PALETTE] = _Palette;
+
+        assert(!jsonDoc.overflowed());
 
         return jsonObject.set(jsonDoc.as<JsonObjectConst>());
     }
@@ -354,7 +356,7 @@ class SpectrumAnalyzerEffect : public LEDStripEffect, virtual public VUMeterEffe
 
     virtual bool SerializeToJSON(JsonObject& jsonObject) override
     {
-        AllocatedJsonDocument jsonDoc(512);
+        AllocatedJsonDocument jsonDoc(LEDStripEffect::_jsonSize + 512);
 
         JsonObject root = jsonDoc.to<JsonObject>();
         LEDStripEffect::SerializeToJSON(root);
@@ -365,6 +367,8 @@ class SpectrumAnalyzerEffect : public LEDStripEffect, virtual public VUMeterEffe
         jsonDoc["frt"]       = _fadeRate;
         jsonDoc["pd1"]       = _peak1DecayRate;
         jsonDoc["pd2"]       = _peak2DecayRate;
+
+        assert(!jsonDoc.overflowed());
 
         return jsonObject.set(jsonDoc.as<JsonObjectConst>());
     }
@@ -405,7 +409,8 @@ class SpectrumAnalyzerEffect : public LEDStripEffect, virtual public VUMeterEffe
 
             if (pGFXChannel->IsPalettePaused())
             {
-                int q = ::map(i, 0, _numBars, 0, 240) + _colorOffset;
+                // We don't use the color offset when the palette is paused
+                int q = ::map(i, 0, _numBars, 0, 240);
                 DrawBar(i, pGFXChannel->ColorFromCurrentPalette(q % 240, 255, _scrollSpeed > 0 ? LINEARBLEND : NOBLEND));
             }
             else

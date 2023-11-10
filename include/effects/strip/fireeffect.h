@@ -64,6 +64,8 @@ class FireEffect : public LEDStripEffect
 
     static const uint8_t BlendTotal = (BlendSelf + BlendNeighbor1 + BlendNeighbor2 + BlendNeighbor3);
 
+    static constexpr int _jsonSize = LEDStripEffect::_jsonSize + 128;
+
     int CellCount() const { return LEDCount * CellsPerLED; }
 
   public:
@@ -101,7 +103,7 @@ class FireEffect : public LEDStripEffect
 
     bool SerializeToJSON(JsonObject& jsonObject) override
     {
-        StaticJsonDocument<LEDStripEffect::_jsonSize + 128> jsonDoc;
+        StaticJsonDocument<_jsonSize> jsonDoc;
 
         JsonObject root = jsonDoc.to<JsonObject>();
         LEDStripEffect::SerializeToJSON(root);
@@ -127,25 +129,6 @@ class FireEffect : public LEDStripEffect
     size_t DesiredFramesPerSecond() const override
     {
         return 45;
-    }
-
-    virtual CRGB GetBlackBodyHeatColor(float temp) const override
-    {
-        temp *= 255;
-        uint8_t t192 = round((temp/255.0f)*191);
-
-        // calculate ramp up from
-        uint8_t heatramp = t192 & 0x3F; // 0..63
-        heatramp <<= 2; // scale up to 0..252
-
-        // figure out which third of the spectrum we're in:
-        if( t192 > 0x80) {                     // hottest
-            return CRGB(255, 255, heatramp);
-        } else if( t192 > 0x40 ) {             // middle
-            return CRGB( 255, heatramp, 0);
-        } else {                               // coolest
-            return CRGB( heatramp, 0, 0);
-        }
     }
 
     void Draw() override
@@ -257,11 +240,14 @@ public:
 
     bool SerializeToJSON(JsonObject& jsonObject) override
     {
-        AllocatedJsonDocument jsonDoc(512);
+        AllocatedJsonDocument jsonDoc(FireEffect::_jsonSize + 512);
 
-        FireEffect::SerializeToJSON(jsonObject);
+        JsonObject root = jsonDoc.to<JsonObject>();
+        FireEffect::SerializeToJSON(root);
 
-        jsonObject[PTY_PALETTE] = _palette;
+        jsonDoc[PTY_PALETTE] = _palette;
+
+        assert(!jsonDoc.overflowed());
 
         return jsonObject.set(jsonDoc.as<JsonObjectConst>());
     }

@@ -41,6 +41,7 @@
 #include "effects/strip/tempeffect.h"
 #include "effects/strip/stareffect.h"
 #include "effects/strip/laserline.h"
+#include "effects/strip/misceffects.h"
 #include "effects/matrix/PatternClock.h"       // No matrix dependencies
 
 #if ENABLE_AUDIO
@@ -58,7 +59,6 @@
 
 #if USE_HUB75
     #include "ledmatrixgfx.h"
-    #include "effects/strip/misceffects.h"
 
     #include "effects/matrix/PatternSMStrobeDiffusion.h"
     #include "effects/matrix/PatternSM2DDPR.h"
@@ -387,6 +387,8 @@ void LoadEffectFactories()
         #endif
 
         ADD_EFFECT(EFFECT_STRIP_COLOR_FILL, ColorFillEffect, CRGB::White, 1);
+
+        ADD_EFFECT(EFFECT_STRIP_FIRE_FAN, FireFanEffect, HeatColors_p, NUM_LEDS, 2, 2, 200, 2, 5, Sequential, true, false);
 
         ADD_EFFECT(EFFECT_STRIP_FIRE_FAN, FireFanEffect, HeatColors_p, NUM_LEDS, 1, 12, 400, 2, NUM_LEDS / 2, Sequential, true, false);
         ADD_EFFECT(EFFECT_STRIP_FIRE_FAN, FireFanEffect, GreenHeatColors_p, NUM_LEDS, 1, 10, 400, 2, NUM_LEDS / 2, Sequential, true, false);
