@@ -1,5 +1,5 @@
 {
-  "name": "Umbrella for ESP32",
+  "name": "Umbrella (N,S,R) for ESP32",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [
