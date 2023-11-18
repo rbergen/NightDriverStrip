@@ -79,6 +79,16 @@ bool CWebServer::PushPostParamIfPresent<int>(AsyncWebServerRequest * pRequest, c
     });
 }
 
+// Push param that represents a color
+template<>
+bool CWebServer::PushPostParamIfPresent<CRGB>(AsyncWebServerRequest * pRequest, const String &paramName, ValueSetter<CRGB> setter)
+{
+    return PushPostParamIfPresent<CRGB>(pRequest, paramName, setter, [](AsyncWebParameter * param) constexpr
+    {
+        return CRGB(strtoul(param->value().c_str(), NULL, 10));
+    });
+}
+
 // Add CORS header to and send JSON response
 template<>
 void CWebServer::AddCORSHeaderAndSendResponse<AsyncJsonResponse>(AsyncWebServerRequest * pRequest, AsyncJsonResponse * pResponse)
@@ -492,8 +502,9 @@ void CWebServer::GetSettings(AsyncWebServerRequest * pRequest)
 void CWebServer::SetSettingsIfPresent(AsyncWebServerRequest * pRequest)
 {
     auto& deviceConfig = g_ptrSystem->DeviceConfig();
+    auto& effectManager = g_ptrSystem->EffectManager();
 
-    PushPostParamIfPresent<size_t>(pRequest,"effectInterval", SET_VALUE(g_ptrSystem->EffectManager().SetInterval(value)));
+    PushPostParamIfPresent<size_t>(pRequest,"effectInterval", SET_VALUE(effectManager.SetInterval(value)));
     PushPostParamIfPresent<String>(pRequest, DeviceConfig::HostnameTag, SET_VALUE(deviceConfig.SetHostname(value)));
     PushPostParamIfPresent<String>(pRequest, DeviceConfig::LocationTag, SET_VALUE(deviceConfig.SetLocation(value)));
     PushPostParamIfPresent<bool>(pRequest, DeviceConfig::LocationIsZipTag, SET_VALUE(deviceConfig.SetLocationIsZip(value)));
@@ -506,6 +517,20 @@ void CWebServer::SetSettingsIfPresent(AsyncWebServerRequest * pRequest)
     PushPostParamIfPresent<bool>(pRequest, DeviceConfig::RememberCurrentEffectTag, SET_VALUE(deviceConfig.SetRememberCurrentEffect(value)));
     PushPostParamIfPresent<int>(pRequest, DeviceConfig::PowerLimitTag, SET_VALUE(deviceConfig.SetPowerLimit(value)));
     PushPostParamIfPresent<int>(pRequest, DeviceConfig::BrightnessTag, SET_VALUE(deviceConfig.SetBrightness(value)));
+
+    #if SHOW_VU_METER
+    PushPostParamIfPresent<bool>(pRequest, DeviceConfig::ShowVUMeterTag, SET_VALUE(effectManager.ShowVU(value)));
+    #endif
+
+    std::optional<CRGB> globalColor = {};
+    std::optional<CRGB> secondColor = {};
+
+    PushPostParamIfPresent<CRGB>(pRequest, DeviceConfig::GlobalColorTag, SET_VALUE(globalColor = value));
+    PushPostParamIfPresent<CRGB>(pRequest, DeviceConfig::SecondColorTag, SET_VALUE(secondColor = value));
+
+    deviceConfig.ApplyColorSettings(globalColor, secondColor,
+                                    IsPostParamTrue(pRequest, DeviceConfig::ClearGlobalColorTag),
+                                    IsPostParamTrue(pRequest, DeviceConfig::ApplyGlobalColorsTag));
 }
 
 // Set settings and return resulting config
