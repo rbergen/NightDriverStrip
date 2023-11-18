@@ -1,0 +1,13 @@
+{
+  "name": "Spectrum (N,W) for M5StickC",
+  "version": "v040",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "../firmware/spectrumlite/merged_image.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

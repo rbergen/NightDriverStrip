@@ -1,0 +1,13 @@
+{
+  "name": "Fan Set (N,W,S,R) for M5StickC Plus",
+  "version": "v040",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "../firmware/fanset/merged_image.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

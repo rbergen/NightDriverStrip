@@ -1,0 +1,13 @@
+{
+  "name": "Demo (N) for Heltec Wifi Kit 32 (V2)",
+  "version": "v040",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "../firmware/heltecv2demo/merged_image.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

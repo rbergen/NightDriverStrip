@@ -1,0 +1,13 @@
+{
+  "name": "Spectrum (N,W) for ESP-WROVER-KIT",
+  "version": "v040",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "../firmware/spectrum_wrover_kit/merged_image.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

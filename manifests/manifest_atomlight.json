@@ -1,0 +1,13 @@
+{
+  "name": "Atom Light (N,S,R) for Heltec Wifi Kit 32",
+  "version": "v040",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "../firmware/atomlight/merged_image.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
