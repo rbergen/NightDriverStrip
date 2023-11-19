@@ -1,5 +1,5 @@
 {
-  "name": "Magic Mirror (N,S,R) for M5StickC",
+  "name": "Magic Mirror for M5StickC",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [

@@ -1,5 +1,5 @@
 {
-  "name": "Cube (N,W,S) for M5StickC Plus",
+  "name": "Cube for M5StickC Plus",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [

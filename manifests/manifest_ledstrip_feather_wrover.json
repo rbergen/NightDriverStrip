@@ -1,5 +1,5 @@
 {
-  "name": "Ledstrip (N,S) for ESP-WROVER-KIT",
+  "name": "Ledstrip for ESP-WROVER-KIT",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [

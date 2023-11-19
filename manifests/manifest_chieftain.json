@@ -1,5 +1,5 @@
 {
-  "name": "Chieftain (N,S) for TinyPICO",
+  "name": "Chieftain for TinyPICO",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [

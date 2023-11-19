@@ -1,5 +1,5 @@
 {
-  "name": "Demo (N) for Heltec Wifi Kit 32 (V2)",
+  "name": "Demo for Heltec Wifi Kit 32 (V2)",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [

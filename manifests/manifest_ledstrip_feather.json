@@ -1,5 +1,5 @@
 {
-  "name": "Ledstrip (N,S) for Adafruit Feather S3 TFT",
+  "name": "Ledstrip for Adafruit Feather S3 TFT",
   "version": "v040",
   "new_install_prompt_erase": true,
   "builds": [
