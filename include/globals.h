@@ -109,6 +109,13 @@
 
 #include <RemoteDebug.h>
 
+// If we're not using GNU C, (unlikely in embedded, especially in this
+// heavily ESP/Arduino-accented probject) elide __attribute__ - but even
+// clang defines and supports this...
+#ifndef __GNUC__
+#  define  __attribute__(x)  /*NOTHING*/
+#endif
+
 // The goal here is to get two variables, one numeric and one string, from the *same* version
 // value.  So if version = 020,
 //
@@ -209,7 +216,7 @@
 #define NET_CORE                1
 #define AUDIO_CORE              0
 #define AUDIOSERIAL_CORE        1
-#define SCREEN_CORE             0
+#define SCREEN_CORE             1
 #define DEBUG_CORE              1
 #define SOCKET_CORE             1
 #define REMOTE_CORE             1
@@ -230,7 +237,16 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 // LEDs, how many, on how many channels, laid out into how many fans/rings, and so on.  You can also
 // specify the audio system config like how many band channels.
 
-#if DEMO
+#if __has_include ("custom_globals.h")
+
+    // To reduce clutter, you may choose to create a new file called `custom_globals.h` in the `includes` directory.
+    // You can place your project configurations and logic to select them in that file.
+    // This can be done once you know how `platformio.ini` and `globals.h` interact with one another
+    // to create different environments and projects.
+
+    #include "custom_globals.h"
+
+#elif DEMO
 
     // This is a simple demo configuration.  To build, simply connect the data lead from a WS2812B
     // strip to pin 5 or other pin marked PIN0 below.  This does not use the OLED, LCD, or anything fancy, it simply drives the
@@ -278,6 +294,67 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #ifndef ENABLE_WEBSERVER
         #define ENABLE_WEBSERVER        0   // Turn on the internal webserver
     #endif
+
+#elif M5DEMO
+
+    // This is the DEMO project customized for the M5 that includes screen support and other
+    // features that make it well suited to the demo strip that runs in Dave's Garage
+
+    #ifndef PROJECT_NAME
+    #define PROJECT_NAME            "M5Demo"
+    #endif
+
+    #define MATRIX_WIDTH            144*5+38
+    #define MATRIX_HEIGHT           1
+    #define NUM_LEDS                (MATRIX_WIDTH*MATRIX_HEIGHT)
+    #define NUM_CHANNELS            1
+    #define COLOR_ORDER             EOrder::RGB
+
+    #define ENABLE_AUDIOSERIAL          0   // Report peaks at 2400baud on serial port for PETRock consumption
+    #define ENABLE_WIFI                 1   // Connect to WiFi
+    #define INCOMING_WIFI_ENABLED       1   // Accepting incoming color data and commands
+    #define WAIT_FOR_WIFI               0   // Hold in setup until we have WiFi - for strips without effects
+    #define TIME_BEFORE_LOCAL           2   // How many seconds before the lamp times out and shows local content
+    #define ENABLE_WEBSERVER            0   // Turn on the internal webserver
+    #define ENABLE_NTP                  1   // Set the clock from the web
+    #define ENABLE_OTA                  0   // Accept over the air flash updates
+    #define ENABLE_REMOTE               0   // IR Remote Control
+    #define ENABLE_AUDIO                1   // Listen for audio from the microphone and process it
+    #define COLORDATA_SERVER_ENABLED    0
+    #define MIN_VU                      20
+    #define NOISE_CUTOFF                10
+
+    #if USE_PSRAM
+        #define MAX_BUFFERS             500
+    #else
+        #define MAX_BUFFERS             24
+    #endif
+
+    #define DEFAULT_EFFECT_INTERVAL     (60*60*24*5)
+
+    #define POWER_LIMIT_MW       12 * 10 * 1000   // 10 amp supply at 5 volts assumed
+
+    #if M5STICKC || M5STICKCPLUS || M5STACKCORE2
+        #define LED_PIN0 32
+    #elif LILYGOTDISPLAYS3
+        #define LED_PIN0 21
+    #else
+        #define LED_PIN0 5
+    #endif
+
+    #define TOGGLE_BUTTON_1 39
+    #define TOGGLE_BUTTON_2 37
+
+    #define NUM_INFO_PAGES          2
+
+    #if M5STICKC || M5STICKCPLUS || M5STACKCORE2
+        #define LED_PIN0 32
+    #elif LILYGOTDISPLAYS3
+        #define LED_PIN0 21
+    #else
+        #define LED_PIN0 5
+    #endif
+
 
 #elif LANTERN
 
@@ -849,8 +926,9 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define LED_FAN_OFFSET_BU           6
     #define POWER_LIMIT_MW              (10 * 5 * 1000)         // Expects at least a 5V, 20A supply (100W)
 
-    // The mic in the M5 is not quite as sensitive as the Mesermizer, so it gets a lower minimum VU than default
-    #define MIN_VU                      180
+    // The mic in the M5 is not quite the same as the Mesmerizer, so it gets a different minimum VU than default
+
+    #define MIN_VU                      280
     #define NOISE_CUTOFF                1000
 
     #if !(ELECROW)
@@ -867,52 +945,48 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     // An M5 stick that controls the 10 RGB fans in my PC
 
     #ifndef PROJECT_NAME
-    #define PROJECT_NAME            "Fan set"
+    #define PROJECT_NAME                "Fan set"
     #endif
 
-    #define ENABLE_AUDIOSERIAL      1   // Report peaks at 2400baud on serial port for PETRock consumption
-    #define ENABLE_WIFI             1           // Connect to WiFi
-    #define INCOMING_WIFI_ENABLED   1           // Accepting incoming color data and commands
-    #define WAIT_FOR_WIFI           0           // Hold in setup until we have WiFi - for strips without effects
-    #define TIME_BEFORE_LOCAL       2           // How many seconds before the lamp times out and shows local content
+    #define ENABLE_AUDIOSERIAL          0   // Report peaks at 2400baud on serial port for PETRock consumption
+    #define ENABLE_WIFI                 1   // Connect to WiFi
+    #define INCOMING_WIFI_ENABLED       1   // Accepting incoming color data and commands
+    #define WAIT_FOR_WIFI               0   // Hold in setup until we have WiFi - for strips without effects
+    #define TIME_BEFORE_LOCAL           2   // How many seconds before the lamp times out and shows local content
 
-    #define ENABLE_WEBSERVER        1   // Turn on the internal webserver
-    #define ENABLE_NTP              1   // Set the clock from the web
-    #define ENABLE_OTA              0   // Accept over the air flash updates
-    #define ENABLE_REMOTE           1   // IR Remote Control
-    #define ENABLE_AUDIO            1   // Listen for audio from the microphone and process it
+    #define ENABLE_WEBSERVER            0   // Turn on the internal webserver
+    #define ENABLE_NTP                  1   // Set the clock from the web
+    #define ENABLE_OTA                  0   // Accept over the air flash updates
+    #define ENABLE_REMOTE               1   // IR Remote Control
+    #define ENABLE_AUDIO                1   // Listen for audio from the microphone and process it
+    #define COLORDATA_SERVER_ENABLED    0
 
     #define DEFAULT_EFFECT_INTERVAL     (60*60*24*5)
 
-    #define LED_PIN0        26
+    #define LED_PIN0                    26
 
-    #define BONUS_PIXELS            32          // Extra pixels - in this case, my case strip
-    #define NUM_CHANNELS            1           // Everything wired sequentially on a single channel
-    #define NUM_FANS                10          // My system has 10 fans.  Because RGB.
-    #define NUM_BANDS               8
-    #define NUM_RINGS               1           // Fans have a single outer ring of pixels
-    #define FAN_SIZE                16          // Each fan's pixel ring has 16 LEDs
-    #define FAN_LEN                 (NUM_FANS * FAN_SIZE)
-    #define MATRIX_WIDTH            (NUM_FANS * FAN_SIZE + BONUS_PIXELS)
-    #define NUM_LEDS                (MATRIX_WIDTH)
-    #define LED_FAN_OFFSET_BU       3
-    #define ENABLE_REMOTE           1           // IR Remote Control
-    #define ENABLE_AUDIO            1           // Listen for audio from the microphone and process it
-    #define POWER_LIMIT_MW          8000
-    #define MATRIX_HEIGHT           1
+    #define BONUS_PIXELS                32  // Extra pixels - in this case, my case strip
+    #define NUM_CHANNELS                1   // Everything wired sequentially on a single channel
+    #define NUM_FANS                    10  // My system has 10 fans.  Because RGB.
+    #define NUM_BANDS                   8
+    #define NUM_RINGS                   1   // Fans have a single outer ring of pixels
+    #define FAN_SIZE                    16  // Each fan's pixel ring has 16 LEDs
+    #define FAN_LEN                     (NUM_FANS * FAN_SIZE)
+    #define MATRIX_WIDTH                (NUM_FANS * FAN_SIZE + BONUS_PIXELS)
+    #define NUM_LEDS                    (MATRIX_WIDTH)
+    #define LED_FAN_OFFSET_BU           3
+    #define POWER_LIMIT_MW              8000
+    #define MATRIX_HEIGHT               1
 
     // Being case-mounted normally, the FANSET needs a more sensitive mic so the NOISE_CUTOFF value is are lower than spectrum
 
-    #define NOISE_CUTOFF            0
-    #define NOISE_FLOOR             0.0f
+    #define NOISE_CUTOFF                0
+    #define NOISE_FLOOR                 0.0f
 
-    #define TOGGLE_BUTTON_1         37
-    #define TOGGLE_BUTTON_2         39
+    #define TOGGLE_BUTTON_1             37
+    #define TOGGLE_BUTTON_2             39
 
-    #if !(SPECTRUM_WROVER_KIT)
-        #define NUM_INFO_PAGES          2
-    #endif
-
+    #define NUM_INFO_PAGES              2
 
 #elif SINGLE_INSULATOR
 
@@ -1437,6 +1511,9 @@ inline int FPS(uint32_t start, uint32_t end, uint32_t perSecond = MILLIS_PER_SEC
 //
 // va-args style printf that returns the formatted string as a reuslt
 
+// Let compiler warn if our arguments don't match.
+inline String str_sprintf(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
+
 inline String str_sprintf(const char *fmt, ...)
 {
     va_list args;
@@ -1445,6 +1522,10 @@ inline String str_sprintf(const char *fmt, ...)
     va_list args_copy;
     va_copy(args_copy, args);
 
+    // BUGBUG: Investigate a vasprintf here and String::copy() to get move semantics
+    // on the return.
+    // Could Save one complete format, a copy, and an alloc and we're called a
+    // few times a second.
     int requiredLen = vsnprintf(nullptr, 0, fmt, args) + 1;
     va_end(args);
 
@@ -1457,7 +1538,11 @@ inline String str_sprintf(const char *fmt, ...)
     vsnprintf(str.get(), requiredLen, fmt, args_copy);
     va_end(args_copy);
 
-    return String(str.get());
+    String retval;
+    retval.reserve(requiredLen); // At least saves one scan of the buffer.
+
+    retval = str.get();
+    return retval;
 }
 
 #include "types.h"

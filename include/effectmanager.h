@@ -319,7 +319,6 @@ public:
         #endif
 
         effect->Start();
-
         _effectStartTime = millis();
     }
 
@@ -467,6 +466,10 @@ public:
 
     void SetInterval(uint interval, bool skipSave = false)
     {
+        // Reject/ignore intervals smaller than a second, but allow 0 (infinity)
+        if (interval > 0 && interval < 1000)
+            return;
+
         _effectInterval = interval;
 
         if (!skipSave)
@@ -519,7 +522,6 @@ public:
         _effectStartTime = millis();
 
         StartEffect();
-
         SaveCurrentEffectIndex();
     }
 
