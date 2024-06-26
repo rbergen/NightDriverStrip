@@ -39,10 +39,13 @@ _Davepl, 9/19/2021_
 - [Sample parts (Plummer's Software LLC Amazon affiliate links)](#sample-parts-plummers-software-llc-amazon-affiliate-links)
 - [Contributing, and the BlinkenPerBit metric](#contributing-and-the-blinkenperbit-metric)
 - [Time it takes to build this project](#time-it-takes-to-build-this-project)
+- [Old Build times, no longer relevant with current platformio, just historical curiosity:](#old-build-times-no-longer-relevant-with-current-platformio-just-historical-curiosity)
 
 ## What NightDriverStrip is
 
 NightDriverStrip is a source code package for building a flash program that you upload to the [ESP32 microcontroller](https://en.wikipedia.org/wiki/ESP32). It can drive up to 8 channels of WS2812B style LEDs connected to the chip pins and display fancy colors and patterns and designs on them. There are numerous effects built in that can be configured to be shown on the LED strip, including audio/music/beat-reactive effects for modules equipped with a microphone. It can also optionally receive color data for the LEDs in a simple LZ-compressed (or non-compressed) format over a TCP/IP socket that is opened by default on port 49152. The ESP32 keeps its clock in sync using NTP.
+
+NightDriver can drive both WS2812B style strips and HUB75 style matrices.
 
 More recently, a web installer has been added to the project with which most of the NightDriver projects can be flashed on supported devices, using nothing but a web browser. Please refer to the next section if this is how you'd like to get started.
 
@@ -250,7 +253,7 @@ Furthermore, it's also possible to "ignore" the persisted effect list altogether
 
 ## Fetching things from the Internet
 
-If you develop an effect that requires data to be pulled in from the Internet then you can register a network reader function with the `NetworkReader` class, which is available via the `g_ptrSystem->NetworkReader()` global reference. You can use either the `PatternSubscribers` or `PatternWeather` effects as sources of inspiration.
+If you develop an effect that requires data to be pulled in from the Internet then you can register a network reader function with the `NetworkReader` class, which is available via the `g_ptrSystem->NetworkReader()` global reference. You can use either the `PatternSubscribers` or `PatternWeather` effects as sources of inspiration.  PatternStocks pulls live (15-min delay) stock quotes from a private server.
 
 ## Build pointers
 
@@ -352,13 +355,16 @@ Add whatever you want and/or need to make your LED dreams come true. Fix my blun
 
 To replicate, build the mesmerizer project.  Then delete pio/build_cache and build again, taking the time for the second build.
 
+- ASUS 7995WX [96-core, 192-thread]
+  -> [davepl, 02/11/2024] 20.73 seconds
+
 - HP Z6 G5A, 7995WX, 128GB [96-core, 192-thread]
   -> [davepl 11/29/2023] 25.270 seconds
 
 - 3970X, 128GB [32-core, 64-thread] Windows11+WSL2/Ubuntu02.04LTS
   -> [davepl 11/29/2023] 34.292 seconds
 
-- Mac M1 Ultra Studio [10-core, 20-thread] 
+- Mac M1 Ultra Studio [10-core, 20-thread]
   -> [davepl 11/29/2023] 48.368 seconds
 
 ## Old Build times, no longer relevant with current platformio, just historical curiosity:

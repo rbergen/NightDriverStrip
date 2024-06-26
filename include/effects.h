@@ -82,6 +82,7 @@
 #define EFFECT_STRIP_TAPE_REEL                          36
 #define EFFECT_STRIP_FAN_BEAT                           37
 #define EFFECT_STRIP_SPLASH_LOGO                        38
+#define EFFECT_STRIP_VUMETER                            39
 
 // Matrix effects
 #define EFFECT_MATRIX_ALIEN_TEXT                       101
@@ -143,6 +144,7 @@
 #define EFFECT_MATRIX_SMTWISTER                        156
 #define EFFECT_MATRIX_SMWALKING_MACHINE                157
 #define EFFECT_MATRIX_ANIMATEDGIF                      158
+#define EFFECT_MATRIX_STOCKS                           159
 
 // Hexagon Effects
 #define EFFECT_HEXAGON_OUTER_RING                      201

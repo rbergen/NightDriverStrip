@@ -264,8 +264,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_CHANNELS            1
     #define ENABLE_AUDIO            0
 
-    #define POWER_LIMIT_MW       12 * 10 * 1000   // 10 amp supply at 5 volts assumed
-
     // Once you have a working project, selectively enable various additional features by setting
     // them to 1 in the list below.  This DEMO config assumes no audio (mic), or screen, etc.
 
@@ -332,8 +330,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
     #define DEFAULT_EFFECT_INTERVAL     (60*60*24*5)
 
-    #define POWER_LIMIT_MW       12 * 10 * 1000   // 10 amp supply at 5 volts assumed
-
     #if M5STICKC || M5STICKCPLUS || M5STACKCORE2
         #define LED_PIN0 32
     #elif LILYGOTDISPLAYS3
@@ -342,10 +338,8 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
         #define LED_PIN0 5
     #endif
 
-    #define TOGGLE_BUTTON_1 39
-    #define TOGGLE_BUTTON_2 37
-
-    #define NUM_INFO_PAGES          2
+    #define TOGGLE_BUTTON_1 37
+    #define TOGGLE_BUTTON_2 39
 
     #if M5STICKC || M5STICKCPLUS || M5STACKCORE2
         #define LED_PIN0 32
@@ -377,8 +371,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_CHANNELS            1
     #define ENABLE_AUDIO            1
 
-    #define POWER_LIMIT_MW       5000   // 1 amp supply at 5 volts assumed
-
     // Once you have a working project, selectively enable various additional features by setting
     // them to 1 in the list below.  This config assumes no audio (mic), or screen, etc.
 
@@ -407,8 +399,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
     #define TOGGLE_BUTTON_1 37
     #define TOGGLE_BUTTON_2 39
-
-    #define NUM_INFO_PAGES          2
 
 #elif TREESET
 
@@ -439,10 +429,8 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_AUDIO      1                     // Listen for audio from the microphone and process it
     #define IR_REMOTE_PIN     25
     #define LED_FAN_OFFSET_BU 12
-    #define POWER_LIMIT_MW    20000
 
     #define TOGGLE_BUTTON  37
-    #define NUM_INFO_PAGES 2
 
 #elif WROVERKIT
 
@@ -453,7 +441,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_RINGS               5
     #define RING_SIZE_0             24
 
-    #define POWER_LIMIT_MW       5000   // 1 amp supply at 5 volts assumed
     #define USE_LCD                 1
 
     #define ENABLE_WIFI             1   // Connect to WiFi
@@ -502,14 +489,11 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define FAN_SIZE        MATRIX_HEIGHT
     #define NUM_LEDS        (MATRIX_WIDTH*MATRIX_HEIGHT)
     #define LED_FAN_OFFSET_BU 6
-    #define POWER_LIMIT_MW  (8 * 5 * 1000)         // Expects at least a 5V, 20A supply (100W)
 
     #define TOGGLE_BUTTON_1 37
     #define TOGGLE_BUTTON_2 39
 
     #define LED_PIN0 32
-
-    #define NUM_INFO_PAGES          2
 
 #elif MESMERIZER
 
@@ -527,7 +511,7 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define INCOMING_WIFI_ENABLED       1   // Accepting incoming color data and commands
     #define WAIT_FOR_WIFI               0   // Hold in setup until we have WiFi - for strips without effects
     #define TIME_BEFORE_LOCAL           2   // How many seconds before the lamp times out and shows local content
-    #define ENABLE_WEBSERVER            1  // Turn on the internal webserver
+    #define ENABLE_WEBSERVER            1   // Turn on the internal webserver
     #define ENABLE_NTP                  1   // Set the clock from the web
     #define ENABLE_OTA                  1   // Accept over the air flash updates
     #define ENABLE_REMOTE               1   // IR Remote Control
@@ -551,9 +535,10 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define IR_REMOTE_PIN               39
     #define INPUT_PIN                   36
     #define LED_FAN_OFFSET_BU           6
-    #define POWER_LIMIT_MW              (5 * 8 * 1000)         // Expects at least a 5V, 8A supply
 
     #define TOGGLE_BUTTON_1             0
+
+    #define COLOR_ORDER                 EOrder::RGB
 
 #elif TTGO
 
@@ -591,10 +576,8 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_LEDS        (MATRIX_WIDTH*MATRIX_HEIGHT)
     #define IR_REMOTE_PIN   22
     #define LED_FAN_OFFSET_BU 6
-    #define POWER_LIMIT_MW  (1 * 5 * 1000)         // Expects at least a 5V, 1A supply
 
     #define TOGGLE_BUTTON_1         35
-    #define NUM_INFO_PAGES          2
 
 #elif XMASTREES
 
@@ -631,11 +614,9 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_LEDS        (MATRIX_WIDTH*MATRIX_HEIGHT)
     #define IR_REMOTE_PIN   25
     #define LED_FAN_OFFSET_BU 6
-    #define POWER_LIMIT_MW  (5 * 5 * 1000)         // Expects at least a 5V, 5A supply
 
     #define TOGGLE_BUTTON_1         37
     #define TOGGLE_BUTTON_2         39
-    #define NUM_INFO_PAGES 2
 
 #elif ATOMLIGHT
 
@@ -666,8 +647,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define BONUS_PIXELS      0
 
     #define IR_REMOTE_PIN 15                        // Eric's is PIN 35
-
-    #define POWER_LIMIT_MW (1000 * 8 * 5)           // 8 amps, 5 volts
 
     // Original Wiring:
     //   Fine red     = 3.3v
@@ -704,7 +683,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_AUDIO    1                     // Listen for audio from the microphone and process it
     #define MAX_BUFFERS     40
 
-    #define POWER_LIMIT_MW (1600 * 1000)                 // 100W transformer for an 8M strip max
     #define DEFAULT_EFFECT_INTERVAL     (1000*30 * 60)
 
 
@@ -751,8 +729,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
     #define LED_FAN_OFFSET_BU 6
 
-    #define POWER_LIMIT_MW 10000
-
 #elif HEXAGON
 
     // The LED strips I use for Christmas lights under my eaves
@@ -774,8 +750,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_REMOTE   0                     // IR Remote Control
     #define ENABLE_AUDIO    0                     // Listen for audio from the microphone and process it
     #define LED_PIN0        5
-
-    #define POWER_LIMIT_MW (INT_MAX)              // Unlimited power for long strips, up to you to limit here or supply enough!
 
     #define DEFAULT_EFFECT_INTERVAL     (1000*20)
 
@@ -806,9 +780,10 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_LEDS        (MATRIX_WIDTH * MATRIX_HEIGHT)
     #define ENABLE_REMOTE   0                     // IR Remote Control
     #define ENABLE_AUDIO    0                     // Listen for audio from the microphone and process it
-    #define LED_PIN0        5
 
-    #define POWER_LIMIT_MW (INT_MAX)              // Unlimited power for long strips, up to you to limit here or supply enough!
+    #ifndef LED_PIN0
+        #define LED_PIN0        5
+    #endif
 
     #define DEFAULT_EFFECT_INTERVAL     (1000*20)
 
@@ -839,8 +814,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_AUDIO    1                     // Listen for audio from the microphone and process it
     #define LED_PIN0        5
 
-    #define POWER_LIMIT_MW (4500)                 // Assumes modern USB3 powered port or supply
-
     #define DEFAULT_EFFECT_INTERVAL     (1000*20)
 
     #define RING_SIZE_0 1
@@ -869,7 +842,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_REMOTE   0                     // IR Remote Control
     #define ENABLE_AUDIO    0                     // Listen for audio from the microphone and process it
     #define LED_PIN0        17
-    #define POWER_LIMIT_MW (3000)                 // 100W transformer for an 8M strip max
     #define DEFAULT_EFFECT_INTERVAL     (1000*60*60*24)
 
 #elif SPECTRUM
@@ -928,7 +900,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_BANDS                   16
     #define NUM_LEDS                    (MATRIX_WIDTH*MATRIX_HEIGHT)
     #define LED_FAN_OFFSET_BU           6
-    #define POWER_LIMIT_MW              (10 * 5 * 1000)         // Expects at least a 5V, 20A supply (100W)
 
     // The mic in the M5 is not quite the same as the Mesmerizer, so it gets a different minimum VU than default
 
@@ -938,10 +909,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #if !(ELECROW)
         #define TOGGLE_BUTTON_1         37
         #define TOGGLE_BUTTON_2         39
-    #endif
-
-    #if !(SPECTRUM_WROVER_KIT)
-        #define NUM_INFO_PAGES          2
     #endif
 
 #elif FANSET
@@ -981,7 +948,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define MATRIX_WIDTH                (NUM_FANS * FAN_SIZE + BONUS_PIXELS)
     #define NUM_LEDS                    (MATRIX_WIDTH)
     #define LED_FAN_OFFSET_BU           3
-    #define POWER_LIMIT_MW              8000
     #define MATRIX_HEIGHT               1
 
     // Being case-mounted normally, the FANSET needs a more sensitive mic so the NOISE_CUTOFF value is are lower than spectrum
@@ -991,8 +957,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
     #define TOGGLE_BUTTON_1             37
     #define TOGGLE_BUTTON_2             39
-
-    #define NUM_INFO_PAGES              2
 
 #elif SINGLE_INSULATOR
 
@@ -1020,9 +984,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_AUDIO    1                     // Listen for audio from the microphone and process it
 
     #define LED_FAN_OFFSET_BU 6
-
-    #define POWER_LIMIT_MW 10000
-
 
     #if M5STICKC
         #define LED_PIN0 26
@@ -1058,12 +1019,9 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_AUDIO      1                     // Listen for audio from the microphone and process it
     #define IR_REMOTE_PIN     26
     #define LED_FAN_OFFSET_BU 6
-    #define POWER_LIMIT_MW    50000
 
     #define TOGGLE_BUTTON_1 37
     #define TOGGLE_BUTTON_2 39
-
-    #define NUM_INFO_PAGES          2
 
 #elif CUBE
 
@@ -1094,12 +1052,9 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define ENABLE_AUDIO      1                     // Listen for audio from the microphone and process it
     #define IR_REMOTE_PIN     26
     #define LED_FAN_OFFSET_BU 6
-    #define POWER_LIMIT_MW    5000
     #define ENABLE_OTA        0
 
     #define TOGGLE_BUTTON  37
-    #define NUM_INFO_PAGES 1
-
     #define COLOR_ORDER EOrder::RGB
 
 #else
@@ -1113,7 +1068,6 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define NUM_CHANNELS            8
     #define NUM_RINGS               5
     #define RING_SIZE_0             24
-    #define POWER_LIMIT_MW          3 * 1000   // 3 watt power supply
 
     // Once you have a working project, selectively enable various additional features by setting
     // them to 1 in the list below.  This DEMO config assumes no audio (mic), or screen, etc.
@@ -1174,6 +1128,12 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 #define ENABLE_WEBSERVER        0   // Chip provides a web server with controls to adjust effects
 #endif
 
+#if ENABLE_WEBSERVER
+    #ifndef ENABLE_WEB_UI
+    #define ENABLE_WEB_UI           1   // Enable HTTP pathnames for the web UI
+    #endif
+#endif
+
 #ifndef ENABLE_OTA
 #define ENABLE_OTA              1   // Listen for over the air update to the flash
 #endif
@@ -1225,7 +1185,7 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 #endif
 
 #ifndef NUM_INFO_PAGES
-#define NUM_INFO_PAGES 1
+#define NUM_INFO_PAGES 2
 #endif
 
 #ifndef COLOR_ORDER
@@ -1310,16 +1270,18 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 #define MATRIX_CALC_DIVIDER 3
 #endif
 
-
 // Power Limit
 //
-// The limit, in watts, that the power supply for your project can supply.  If your demands
-// exceed this, the code wil try to scale back brightness to hit this.  Don't rely on this
-// for safety, obviously, design your hardware to protect against it with a fuse, etc.
+// The maximum amount of power, in milliwatts, that you want your project to use, if you want to limit that.
+// If your demands exceed this in practice, the code will try to scale back brightness to hit this.
+// Don't rely on this for safety! Instead, design your hardware to protect against it with a fuse, etc.
+// Another way to limit power usage is through the Brightness setting that is contained by the DeviceConfig
+// class. Again, this should not be your primary/only means to protect against the overdraft of power.
+// If POWER_LIMIT_MW is unset and DeviceConfig's Brightness is set to maximum, the amount of power drawn will
+// not be limited at the software level.
 
-#ifndef POWER_LIMIT_MW
-#define POWER_LIMIT_MW 500*5                // Define for your power supply, default is a low 2500mA for USB
-#endif
+// #define POWER_LIMIT_MW 500*5                 // Define for your power draw limit. Example is a low 2500mA
+                                                // which may dim your LEDs quite a lot.
 
 // Display
 //
@@ -1350,7 +1312,7 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
 
         #define USE_M5DISPLAY 1                               // enable the M5's LCD screen
 
-    #elif ESP32FEATHERTFT || PANLEE || LILYGOTDISPLAYS3
+    #elif USE_TFTSPI || ESP32FEATHERTFT || PANLEE || LILYGOTDISPLAYS3
 
         #define USE_TFTSPI 1                                  // Use TFT_eSPI
 
@@ -1365,6 +1327,10 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #elif ELECROW
 
         // Implies ElecrowScreen
+
+    #elif AMOLED_S3
+
+        // Implicitly uses LilyGoScreen3
 
     #else                                                     // unsupported board defined in platformio
         #error Unknown Display! Check platformio.ini board definition.
@@ -1385,10 +1351,17 @@ extern RemoteDebug Debug;           // Let everyone in the project know about it
     #define TFT_HEIGHT  320
 #endif
 
+#if AMOLED_S3
+    #define TFT_WIDTH   240
+    #define TFT_HEIGHT  536
+#endif
+
+
 #ifdef ESP32FEATHERTFT
-    #define ONBOARD_PIXEL_ORDER     EOrder::RGB
-    #define ONBOARD_PIXEL_POWER     34
-    #define ONBOARD_PIXEL_DATA      33
+// Commented out because FastLED crashes if the onboard pixel is used
+//    #define ONBOARD_PIXEL_ORDER     EOrder::RGB
+//    #define ONBOARD_PIXEL_POWER     34
+//    #define ONBOARD_PIXEL_DATA      33
 #endif
 
 #ifndef USE_OLED
@@ -1563,6 +1536,7 @@ inline String str_sprintf(const char *fmt, ...)
 template <typename T>
 inline static T random_range(T lower, T upper)
 {
+#if USE_STRONG_RAND
     static_assert(std::is_arithmetic<T>::value, "Template argument must be numeric type");
 
     static std::random_device rd;
@@ -1575,6 +1549,17 @@ inline static T random_range(T lower, T upper)
         std::uniform_real_distribution<T> distrib(lower, upper);
         return distrib(gen);
     }
+#else
+    static bool seeded = [&] { srand(time(nullptr)); return true; } ();
+
+    if constexpr (std::is_integral<T>::value) {
+        return std::rand() % (upper - lower + 1) + lower;
+    } else if constexpr (std::is_floating_point<T>::value) {
+        return std::rand() / (RAND_MAX / (upper - lower)) + lower;
+    } else {
+        static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "Template argument must be numeric type");
+    }
+#endif
 }
 
 inline uint64_t ULONGFromMemory(uint8_t * payloadData)

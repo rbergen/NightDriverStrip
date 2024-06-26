@@ -32,25 +32,25 @@
 
 // Include the effect classes we'll need later
 
-#include "effects/strip/fireeffect.h"          // fire effects
-#include "effects/strip/paletteeffect.h"       // palette effects
-#include "effects/strip/doublepaletteeffect.h" // double palette effect
-#include "effects/strip/meteoreffect.h"        // meteor blend effect
-#include "effects/strip/stareffect.h"          // star effects
-#include "effects/strip/bouncingballeffect.h"  // bouincing ball effectsenable+
+#include "effects/strip/fireeffect.h"           // fire effects
+#include "effects/strip/paletteeffect.h"        // palette effects
+#include "effects/strip/doublepaletteeffect.h"  // double palette effect
+#include "effects/strip/meteoreffect.h"         // meteor blend effect
+#include "effects/strip/stareffect.h"           // star effects
+#include "effects/strip/bouncingballeffect.h"   // bouincing ball effectsenable+
 #include "effects/strip/tempeffect.h"
 #include "effects/strip/stareffect.h"
 #include "effects/strip/laserline.h"
 #include "effects/strip/misceffects.h"
-#include "effects/matrix/PatternClock.h"       // No matrix dependencies
+#include "effects/matrix/PatternClock.h"        // No matrix dependencies
 
 #if ENABLE_AUDIO
-    #include "effects/matrix/spectrumeffects.h"    // Musis spectrum effects
-    #include "effects/strip/musiceffect.h"         // Music based effects
+    #include "effects/matrix/spectrumeffects.h" // Musis spectrum effects
+    #include "effects/strip/musiceffect.h"      // Music based effects
 #endif
 
 #if FAN_SIZE
-    #include "effects/strip/faneffects.h" // Fan-based effects
+    #include "effects/strip/faneffects.h"       // Fan-based effects
 #endif
 
 //
@@ -105,6 +105,7 @@
   #if ENABLE_WIFI
     #include "effects/matrix/PatternSubscribers.h"
     #include "effects/matrix/PatternWeather.h"
+    #include "effects/matrix/PatternStocks.h"
   #endif
 
 #endif  // USE_HUB75
@@ -113,10 +114,13 @@
     #include "ledstripgfx.h"
 #endif
 
-// Static initializers for effects that need them
+// Inform the linker which effects have setting specs, and in which class member
+
+INIT_EFFECT_SETTING_SPECS(LEDStripEffect, _baseSettingSpecs);
 
 #if USE_HUB75 && ENABLE_WIFI
-    std::vector<SettingSpec, psram_allocator<SettingSpec>> PatternSubscribers::mySettingSpecs = {};
+    INIT_EFFECT_SETTING_SPECS(PatternSubscribers, mySettingSpecs);
+    INIT_EFFECT_SETTING_SPECS(PatternStocks, mySettingSpecs);
 #endif
 
 // Effect factories for the StarryNightEffect - one per star type
@@ -179,26 +183,24 @@ void LoadEffectFactories()
     // Fill effect factories
     #elif M5DEMO
 
-        ADD_STARRY_NIGHT_EFFECT(MusicStar, "RGB Music Blend Stars", RGBColors_p, 0.4, 1, NOBLEND, 5.0, 0.1, 10.0);                                                     // RGB Music Blur - Can You Hear Me Knockin'
+        #ifndef EFFECT_SET_VERSION
+            #define EFFECT_SET_VERSION  2   // Bump version if default set changes in a meaningful way
+        #endif
 
-        ADD_EFFECT(EFFECT_STRIP_PALETTE, PaletteEffect, RainbowColors_p);
-        ADD_EFFECT(EFFECT_STRIP_PALETTE, PaletteEffect, RainbowColors_p, 1.0, 1.0);
-        ADD_EFFECT(EFFECT_STRIP_PALETTE, PaletteEffect, RainbowColors_p, .25);
-
-        ADD_EFFECT(EFFECT_STRIP_BOUNCING_BALL, BouncingBallEffect, 8, true, true, 1);
-        ADD_EFFECT(EFFECT_STRIP_BOUNCING_BALL, BouncingBallEffect, 3, true, true, 1);
-        ADD_EFFECT(EFFECT_STRIP_TWINKLE, TwinkleEffect, NUM_LEDS * 4, 20, 0);
-    /*
         ADD_EFFECT(EFFECT_STRIP_FIRE, FireEffect, "Medium Fire", NUM_LEDS, 1, 3, 100, 3, 4, true, true);
+        ADD_EFFECT(EFFECT_STRIP_BOUNCING_BALL, BouncingBallEffect, 3, true, true, 1);
+        ADD_EFFECT(EFFECT_STRIP_BOUNCING_BALL, BouncingBallEffect, 8, true, true, 1);
         ADD_EFFECT(EFFECT_STRIP_METEOR, MeteorEffect, 4, 4, 10, 2.0, 2.0);
-
-        ADD_STARRY_NIGHT_EFFECT(QuietStar, "Rainbow Twinkle Stars", RainbowColors_p, STARRYNIGHT_PROBABILITY, 1, LINEARBLEND, 2.0, 0.0, STARRYNIGHT_MUSICFACTOR);       // Rainbow Twinkle
-        ADD_STARRY_NIGHT_EFFECT(MusicStar, "Rainbow Music Stars", RainbowColors_p, 2.0, 2, LINEARBLEND, 5.0, 0.0, 10.0);                                                // Rainbow Music Star
+        ADD_EFFECT(EFFECT_STRIP_METEOR, MeteorEffect, 2, 4, 10, 2.0, 2.0);
+        ADD_STARRY_NIGHT_EFFECT(QuietStar, "Red Twinkle Stars", RedColors_p, 1.0, 1, LINEARBLEND, 2.0);                                                                 // Red Twinkle
         ADD_STARRY_NIGHT_EFFECT(QuietStar, "Green Twinkle Stars", GreenColors_p, STARRYNIGHT_PROBABILITY, 1, LINEARBLEND, 2.0, 0.0, STARRYNIGHT_MUSICFACTOR);           // Green Twinkle
         ADD_STARRY_NIGHT_EFFECT(Star, "Blue Sparkle Stars", BlueColors_p, STARRYNIGHT_PROBABILITY, 1, LINEARBLEND, 2.0, 0.0, STARRYNIGHT_MUSICFACTOR);                  // Blue Sparkle
-        ADD_STARRY_NIGHT_EFFECT(QuietStar, "Red Twinkle Stars", RedColors_p, 1.0, 1, LINEARBLEND, 2.0);                                                                 // Red Twinkle
-    */
-
+        ADD_STARRY_NIGHT_EFFECT(QuietStar, "Rainbow Twinkle Stars", RainbowColors_p, STARRYNIGHT_PROBABILITY, 1, LINEARBLEND, 2.0, 0.0, STARRYNIGHT_MUSICFACTOR);       // Rainbow Twinkle
+        ADD_STARRY_NIGHT_EFFECT(MusicStar, "RGB Music Blend Stars", RGBColors_p, 0.2, 1, NOBLEND, 5.0, 0.1, 2.0);                                                     // RGB Music Blur - Can You Hear Me Knockin'
+        ADD_EFFECT(EFFECT_STRIP_TWINKLE, TwinkleEffect, NUM_LEDS / 2, 20, 50);
+        ADD_EFFECT(EFFECT_STRIP_PALETTE, PaletteEffect, RainbowColors_p, .25, 1, 0, 1.0, 0.0, LINEARBLEND, true, 1.0);
+        ADD_EFFECT(EFFECT_STRIP_PALETTE, PaletteEffect, RainbowColors_p);
+        ADD_STARRY_NIGHT_EFFECT(MusicStar, "Rainbow Twinkle Stars", RainbowColors_p, STARRYNIGHT_PROBABILITY, 1, LINEARBLEND, 0.0, 0.0, STARRYNIGHT_MUSICFACTOR);       // Rainbow Twinkle
 
     #elif LASERLINE
 
@@ -218,10 +220,10 @@ void LoadEffectFactories()
     #elif MESMERIZER
 
         #ifndef EFFECT_SET_VERSION
-            #define EFFECT_SET_VERSION  6   // Bump version if default set changes in a meaningful way
+            #define EFFECT_SET_VERSION  6  // Bump version if default set changes in a meaningful way
         #endif
 
-        ADD_EFFECT(EFFECT_MATRIX_SPECTRUMBAR,       SpectrumBarEffect,      "Audiograph");
+        ADD_EFFECT(EFFECT_MATRIX_SPECTRUMBAR,       SpectrumBarEffect,      "Audiograph",  16,            4,                   0);
         ADD_EFFECT(EFFECT_MATRIX_SPECTRUM_ANALYZER, SpectrumAnalyzerEffect, "Spectrum",    NUM_BANDS,     spectrumBasicColors, false, 100, 0, 0.75, 0.75);
         ADD_EFFECT(EFFECT_MATRIX_SPECTRUM_ANALYZER, SpectrumAnalyzerEffect, "AudioWave",   MATRIX_WIDTH,  CRGB(0,0,40),               0, 1.25, 1.25);
         ADD_EFFECT(EFFECT_MATRIX_SMRADIAL_WAVE,     PatternSMRadialWave);
@@ -252,6 +254,7 @@ void LoadEffectFactories()
 
 
       #if ENABLE_WIFI
+        ADD_EFFECT(EFFECT_MATRIX_STOCKS,            PatternStocks);
         ADD_EFFECT(EFFECT_MATRIX_SUBSCRIBERS,       PatternSubscribers);
         ADD_EFFECT(EFFECT_MATRIX_WEATHER,           PatternWeather);
       #endif
