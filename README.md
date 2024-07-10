@@ -2,10 +2,10 @@
 
 **DEVELOPERS WANTED!** We are searching for talented React and C++ developers to help out on this project.  Check out the code and if you're interested, contact <davepl@davepl.com>.
 
-![CI](https://github.com/PlummersSoftwareLLC/NightDriverStrip/actions/workflows/CI.yml/badge.svg)
+![CI](https://github.com/PlummersSoftwareLLC/NightDriverStrip/actions/workflows/CI.yml/badge.svg) ![Release Web Installer build and deploy](https://github.com/PlummersSoftwareLLC/NightDriverStrip/actions/workflows/release.yml/badge.svg)
 
 <!-- markdownlint-disable MD033 /no-inline-html -->
-<img src="assets/NightDriverLogo-small.png" width="400" />
+<img src="assets/NightDriverLogo-small.png" width="400" alt="NightDriver logo" />
 
 <!-- markdownlint-disable-next-line MD036 /no-emphasis-as-heading -->
 _Davepl, 9/19/2021_
@@ -48,6 +48,24 @@ NightDriverStrip is a source code package for building a flash program that you 
 NightDriver can drive both WS2812B style strips and HUB75 style matrices.
 
 More recently, a web installer has been added to the project with which most of the NightDriver projects can be flashed on supported devices, using nothing but a web browser. Please refer to the next section if this is how you'd like to get started.
+
+## Project Overview:
+
+- It's an open-source project for controlling LED strips/matrices and doing cool effects on them
+- Uses WiFi for remote control and data reception.
+- Supports audio reactive effects.
+- Includes a web server and telnet debug server.
+
+## Key Features
+
+- Multiple LED control methods (WS2812B, HUB75, etc.)
+- WiFi connectivity for remote control and data
+- Audio analysis for sound-reactive effects
+- OTA (Over-The-Air) updates
+- Debug console accessible via telnet and serial
+- Display support (OLED, TFT, LCD) for status information
+- NTP time synchronization so effects can span multiple ESP32s in sync
+- Configurable via web interface that runs on the ESP32
 
 ## Using the Web Installer
 
