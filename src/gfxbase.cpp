@@ -628,7 +628,7 @@ void GFXBase::blurColumns(CRGB *leds, uint16_t width, uint16_t height, uint16_t 
         }
         CRGB *carry = _blurColumnScratch;
         CRGB *pending = _blurColumnScratch + _blurColumnScratchWidth;
-        memset(carry, 0, width * sizeof(CRGB));
+        ::memset(carry, 0, width * sizeof(CRGB));
 
         const uint8_t keep = 255 - blur_amount;
         const uint8_t seep = blur_amount >> 1;
@@ -658,7 +658,7 @@ void GFXBase::blurColumns(CRGB *leds, uint16_t width, uint16_t height, uint16_t 
                 delay(10);
         }
         if (first < height)
-            memcpy(leds + static_cast<size_t>(height - 1) * width, pending, width * sizeof(CRGB));
+            ::memcpy(leds + static_cast<size_t>(height - 1) * width, pending, width * sizeof(CRGB));
         return;
     }
 

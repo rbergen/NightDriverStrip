@@ -68,9 +68,9 @@ void GFXBase::MoveInwardX(int startY, int endY)
             CRGB *line = leds + static_cast<size_t>(y) * width;
             const CRGB leftEdge = line[0];
             const CRGB rightEdge = line[width - 1];
-            memmove(line + scrollPixels, line,
+            ::memmove(line + scrollPixels, line,
                     sizeof(CRGB) * (halfWidth - scrollPixels));
-            memmove(line + halfWidth, line + halfWidth + scrollPixels,
+            ::memmove(line + halfWidth, line + halfWidth + scrollPixels,
                     sizeof(CRGB) * (halfWidth - scrollPixels));
             std::fill_n(line, scrollPixels, leftEdge);
             std::fill_n(line + width - scrollPixels, scrollPixels, rightEdge);
@@ -114,9 +114,9 @@ void GFXBase::MoveOutwardsX(int startY, int endY)
             CRGB *line = leds + static_cast<size_t>(y) * width;
             const CRGB leftCenter = line[halfWidth - 1];
             const CRGB rightCenter = line[halfWidth];
-            memmove(line, line + scrollPixels,
+            ::memmove(line, line + scrollPixels,
                     sizeof(CRGB) * (halfWidth - scrollPixels));
-            memmove(line + halfWidth + scrollPixels, line + halfWidth,
+            ::memmove(line + halfWidth + scrollPixels, line + halfWidth,
                     sizeof(CRGB) * (halfWidth - scrollPixels));
             std::fill_n(line + halfWidth - scrollPixels, scrollPixels, leftCenter);
             std::fill_n(line + halfWidth, scrollPixels, rightCenter);
