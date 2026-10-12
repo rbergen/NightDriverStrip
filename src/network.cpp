@@ -1127,7 +1127,7 @@ void IRAM_ATTR ColorStreamerService::Run()
                 previewPacket->header = COLOR_DATA_PACKET_HEADER;
                 previewPacket->width  = graphics.GetMatrixWidth();
                 previewPacket->height = graphics.GetMatrixHeight();
-                memcpy(previewPacket->colors, leds, sizeof(CRGB) * activeLEDCount);
+                ::memcpy(previewPacket->colors, leds, sizeof(CRGB) * activeLEDCount);
 
                 // Prefer the websocket preview transport used by the local UI. The legacy raw TCP
                 // preview socket remains available for external tools, but we do not drive both

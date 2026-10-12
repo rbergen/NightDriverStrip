@@ -86,7 +86,7 @@ void HUB75GFX::setLeds(CRGB* pLeds)
 
 void HUB75GFX::fillLeds(const CRGB* pLEDs)
 {
-    memcpy(leds, pLEDs, sizeof(CRGB) * GetLEDCount());
+    ::memcpy(leds, pLEDs, sizeof(CRGB) * GetLEDCount());
 }
 
 void HUB75GFX::Clear(CRGB color)
@@ -141,8 +141,8 @@ void HUB75GFX::MoveInwardX(int startY, int endY)
         auto pLine2 = pLine + halfWidth;
         const CRGB leftEdge = pLine[0];
         const CRGB rightEdge = pLine[MATRIX_WIDTH - 1];
-        memmove(pLine + scrollPixels, pLine, sizeof(CRGB) * (halfWidth - scrollPixels));
-        memmove(pLine2, pLine2 + scrollPixels, sizeof(CRGB) * (halfWidth - scrollPixels));
+        ::memmove(pLine + scrollPixels, pLine, sizeof(CRGB) * (halfWidth - scrollPixels));
+        ::memmove(pLine2, pLine2 + scrollPixels, sizeof(CRGB) * (halfWidth - scrollPixels));
         std::fill_n(pLine, scrollPixels, leftEdge);
         std::fill_n(pLine + MATRIX_WIDTH - scrollPixels, scrollPixels, rightEdge);
     }
@@ -166,8 +166,8 @@ void HUB75GFX::MoveOutwardsX(int startY, int endY)
         auto pLine2 = pLine + halfWidth;
         const CRGB leftCenter = pLine[halfWidth - 1];
         const CRGB rightCenter = pLine[halfWidth];
-        memmove(pLine, pLine + scrollPixels, sizeof(CRGB) * (halfWidth - scrollPixels));
-        memmove(pLine2 + scrollPixels, pLine2, sizeof(CRGB) * (halfWidth - scrollPixels));
+        ::memmove(pLine, pLine + scrollPixels, sizeof(CRGB) * (halfWidth - scrollPixels));
+        ::memmove(pLine2 + scrollPixels, pLine2, sizeof(CRGB) * (halfWidth - scrollPixels));
         std::fill_n(pLine + halfWidth - scrollPixels, scrollPixels, leftCenter);
         std::fill_n(pLine2, scrollPixels, rightCenter);
     }
@@ -321,7 +321,7 @@ void HUB75GFX::MatrixSwapBuffers(bool copyPresentedFrame)
 
     drawBufferIndex ^= 1;
     if (copyPresentedFrame)
-        memcpy(frameBuffers[drawBufferIndex], frameBuffers[presentedIndex], sizeof(frameBuffers[0]));
+        ::memcpy(frameBuffers[drawBufferIndex], frameBuffers[presentedIndex], sizeof(frameBuffers[0]));
 }
 
 bool HUB75GFX::WaitForMatrixSwap(uint32_t timeoutMs)

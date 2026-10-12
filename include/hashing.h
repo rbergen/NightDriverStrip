@@ -40,9 +40,6 @@
 #include <utility>
 #include <vector>
 
-// Forward declarations for FastLED types to avoid including heavy headers
-struct CRGB;
-struct CRGBPalette16;
 
 namespace fnv1a
 {

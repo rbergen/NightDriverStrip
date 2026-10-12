@@ -104,9 +104,9 @@ class PatternSpin : public EffectWithId<PatternSpin>
         float tempDegrees = degrees;
 
         do{
-            float radians = radians(tempDegrees);
-            x = (int) (MATRIX_CENTER_X + radius * cos(radians));
-            y = (int) (MATRIX_CENTER_Y - radius * sin(radians));
+            float rad = radians(tempDegrees);
+            x = (int) (MATRIX_CENTER_X + radius * cos(rad));
+            y = (int) (MATRIX_CENTER_Y - radius * sin(rad));
 
             g().drawPixel(x, y, color);
             g().drawPixel(y, x, color);

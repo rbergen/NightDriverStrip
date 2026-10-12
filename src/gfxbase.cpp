@@ -200,7 +200,7 @@ void GFXBase::Clear(CRGB color)
 {
     const size_t count = _width * _height;
     if (color == CRGB::Black)
-        memset(leds, 0, sizeof(CRGB) * count);
+        ::memset(leds, 0, sizeof(CRGB) * count);
     else
         fill_solid(leds, count, color);
 

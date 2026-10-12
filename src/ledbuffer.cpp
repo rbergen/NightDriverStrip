@@ -129,7 +129,7 @@ bool LEDBuffer::UpdateFromWire(const uint8_t* payloadData, size_t payloadLength)
     _timeStampMicroseconds = micros;
     _pixelCount            = length32;
 
-    memcpy(_leds.get(), pRGB, payloadBytes);
+    ::memcpy(_leds.get(), pRGB, payloadBytes);
     debugV("seconds, micros: %llu.%llu", seconds, micros);
     if (length32 > 0)
         debugV("Color0: %08lx", (unsigned long)(uint32_t) _leds[0]);

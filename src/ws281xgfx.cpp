@@ -230,7 +230,7 @@ void WS281xGFX::ConfigureTopology(size_t width, size_t height, bool serpentine)
 
         if (leds)
         {
-            memcpy(newPixels, leds, std::min(GetLEDCount(), newLEDCount) * sizeof(CRGB));
+            ::memcpy(newPixels, leds, std::min(GetLEDCount(), newLEDCount) * sizeof(CRGB));
             heap_caps_free(leds);
         }
 

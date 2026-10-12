@@ -105,6 +105,12 @@ extern std::recursive_mutex g_render_mutex;
 extern std::recursive_mutex g_effect_manager_mutex;
 
 #include <FastLED.h>
+namespace fl
+{
+    // Non-template overloads win over both std::swap and fl::swap during ADL
+    inline void swap(CRGB& a, CRGB& b) noexcept { CRGB t = a; a = b; b = t; }
+    inline void swap(CRGB*& a, CRGB*& b) noexcept { CRGB* t = a; a = b; b = t; }
+}
 // If we're not using GNU C, (unlikely in embedded, especially in this
 // heavily ESP/Arduino-accented probject) elide __attribute__ - but even
 // clang defines and supports this...
